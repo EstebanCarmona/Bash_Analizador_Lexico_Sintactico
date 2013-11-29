@@ -1,6 +1,6 @@
 /*
-    JUAN ESTEBAN YARCE CARMONA
-    JEIMY TATIANA SALAMANCA DUCON
+  JEYC
+  JTSD
 */
 %{
 #include <ctype.h>
