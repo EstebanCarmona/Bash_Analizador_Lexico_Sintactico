@@ -19,9 +19,10 @@
     char*   varStr;
   } ArregloVariables;
 
+  //Se crea el vector para guardar las variables
   ArregloVariables vectorDatos [10];
 
-  void IngresarDatos (char* nomVar, double num, char* str){ 
+  void IngresarDatos (char* nomVar, float num, char* str){ 
    //printf("%s\n","Ingresar" );
   int i = 0;
 
@@ -47,7 +48,7 @@
     }
   }
 
-  void Actualizar(char* nomVar, int numero, char* string){
+  void Actualizar(char* nomVar, float numero, char* string){
     int i;
     for(i = 0; i < 10; i++){
       if(vectorDatos[i].varNombre != NULL){
@@ -151,6 +152,7 @@
 %type  <strval>   mostrarStr
 %type  <floatval> mostrarFloat
 %type  <strval>   valStr
+%type  <strval>   mostrar
 
 
 %% 
@@ -166,16 +168,18 @@ line:
 | asignacion {}
 | mostrarStr   { printf("%s\n",$1); }
 | mostrarFloat { printf("%.10g\n",$1); }
-| exp '\n' { printf ("%.10g\n>",$1); }
-| expStr '\n' { printf("%s\n",$1); }
+| mostrar      {}
+| exp          { printf("Bash: comando no esncontrado\n");}
+| expStr '\n'  { printf("%s\n",$1); }
 ;
 
 expStr:
-CADENASTRING   { $$ = $1; }
+valStr              { $$ = $1; }
 | valStr '+' valStr { char* str = malloc(150);
           *str = 0;
           strcat(str,$1);
           $$ = strcat(str, $3); }
+| '$' IDVAR         { $$ = ""; }          
 ;
 
 valStr:
@@ -191,7 +195,7 @@ CADENASTRING { $$ = $1; }
 ;
 
 exp:
- term          { $$ = $1; }
+ term           { $$ = $1; }
 | exp '+' term  { $$ = $1 + $3; }
 | exp '-' term  { $$ = $1 - $3; }
 ;
@@ -207,7 +211,7 @@ term:
 ;
 
 valor:
- '$'IDVARFLOAT   { float val = buscarValorFloat($2);
+ '$'IDVARFLOAT    { float val = buscarValorFloat($2);
                     if(val != -1){
                       $$ = val;
                     }else{
@@ -248,32 +252,15 @@ asignacion:
 ;
 
 mostrarFloat:
-MOSTRARVAR exp { $$ = $2; }
-| MOSTRARVAR '$' IDVARFLOAT { 
-                  float val = buscarValorFloat($3);
-                    if(val != -1){
-                      $$ = val;
-                    }else{
-                      $$ = 1.18e-38;
-                      }
-                  }
+ MOSTRARVAR exp { $$ = $2; }
 ;
 
 mostrarStr:
-  MOSTRARVAR CADENASTRING {
-                            $$ = $2;
-                          }
-| MOSTRARVAR '$' IDVARSTRING {
-                  char* val = buscarValorString($3);
-                    if(strcmp(val,"noEncontrado") != 0){
-                      $$ = val;
-                    }else{
-                      printf("%s\n", "La variable no existe" );
-                    }
-                  }
-| MOSTRARVAR '$' IDVAR {
-                  printf("%s\n","");
-                  }
+  MOSTRARVAR expStr { $$ = $2; }
+;
+
+mostrar:
+  MOSTRARVAR { $$ = $1; }
 %%
 int main (void)
 {

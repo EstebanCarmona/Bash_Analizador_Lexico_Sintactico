@@ -496,8 +496,8 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "interpreteBash.lex"
 /*
-    JUAN ESTEBAN YARCE CARMONA
-    JEIMY TATIANA SALAMANCA DUCON
+  JEYC
+  JTSD
 */
 #line 6 "interpreteBash.lex"
 #include <ctype.h>
