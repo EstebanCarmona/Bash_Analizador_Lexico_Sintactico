@@ -1,6 +1,6 @@
 Bash_Analizador_Lexico_Sintactico
 =================================
-
+Analizador lexico y sintactico de bash, hecho con flex y bison
 
 Uso
 ===========
