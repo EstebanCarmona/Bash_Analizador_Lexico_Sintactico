@@ -5,7 +5,7 @@ Bash_Analizador_Lexico_Sintactico
 Uso
 ===========
 ``` sh
-./run 
+./run.sh
 ```
 
 Documentacion
