@@ -146,7 +146,8 @@
 //No terminales
 %type  <floatval> exp  
 %type  <strval>   expStr
-%type  <floatval> term  
+%type  <floatval> term 
+%type  <strval>   termxStr
 %type  <floatval> valor 
 %type  <strval>   asignacion
 %type  <strval>   mostrarStr
@@ -169,17 +170,21 @@ line:
 | mostrarStr   { printf("%s\n",$1); }
 | mostrarFloat { printf("%.10g\n",$1); }
 | mostrar      {}
-| exp          { printf("Bash: comando no esncontrado\n");}
+| exp          { printf("Bash: comando no encontrado\n");}
 | expStr '\n'  { printf("%s\n",$1); }
 ;
 
 expStr:
 valStr              { $$ = $1; }
-| valStr '+' valStr { char* str = malloc(150);
+| termxStr '+' termxStr { char* str = malloc(150);
           *str = 0;
           strcat(str,$1);
           $$ = strcat(str, $3); }
 | '$' IDVAR         { $$ = ""; }          
+;
+
+termxStr:
+valStr { $$ = $1; }
 ;
 
 valStr:
@@ -212,7 +217,7 @@ term:
 
 valor:
  '$'IDVARFLOAT    { float val = buscarValorFloat($2);
-                    if(val != -1){
+                    if(val != -1 && val != 0){
                       $$ = val;
                     }else{
                       printf("%s\n", "La variable no existe" );
